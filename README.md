@@ -141,4 +141,4 @@ onDownload(pdfFile: File) {
 
 Si tiene alguna sugerencia, recomendación y/o problema relacionado al proyecto, porfavor hágamelo saber mediante una `issue` en la sección `issues` de este repositorio.
 
-Alternativamen también puede escribirme a mi correo f.michaell.a.m@gmail.com
+También puede escribirme a mi correo f.michaell.a.m@gmail.com
