@@ -1,11 +1,30 @@
 {
-  "name": "ngx-pdf",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^10.2.5",
-    "@angular/core": "^10.2.5"
-  },
-  "dependencies": {
-    "tslib": "^2.0.0"
-  }
+	"name": "ngx-pdf",
+	"version": "0.0.1",
+	"description": "Angular +10 Components Library to create PDF files",
+	"author": "Michaell Alavedra Munayco",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MichaellAlavedraMunayco/ngx-pdf.git"
+	},
+	"bugs": {
+		"url": "https://github.com/MichaellAlavedraMunayco/ngx-pdf/issues"
+	},
+	"homepage": "https://MichaellAlavedraMunayco.github.io/ngx-pdf",
+	"keywords": [
+		"angular",
+		"pdf",
+		"component",
+		"template",
+		"HTML",
+		"CSS"
+	],
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^10.2.5",
+		"@angular/core": "^10.2.5"
+	},
+	"dependencies": {
+		"tslib": "^2.0.0"
+	}
 }
