@@ -3,20 +3,21 @@
 
 > Angular +10 component library for building PDF files on-the-fly
 
-**ngx-pdf** está construida para desarrolladores en Angular e inspirada en la librería para PHP [mPDF](https://mpdf.github.io/), y tiene como finalidad facilitar la codificación y generación de archivos complejos de PDF.
+**ngx-pdf** (inspirado en [mPDF](https://mpdf.github.io/)) está construida para desarrolladores Angular, y tiene como finalidad facilitar la codificación y generación de archivos complejos de PDF.
 
 El propósito principal de **ngx-pdf** consiste en convertir **sobre la marcha**, código **HTML** y **CSS** en un archivo **PDF** mediante componentes pre-construidos.
+
 **Ngx-pdf** no genera archivos PDF desde Typescript.
 
 Para mayor entendimiento, revise la [documentación](https://michaellalavedramunayco.github.io/ngx-pdf) y las [demostraciones](https://michaellalavedramunayco.github.io/ngx-pdf)
 
 ## Features
 
-- ⬜ Marcas de contenido (bookmark)
 - ⬜ Orientación de páginas
 - ⬜ Numeración de páginas
 - ⬜ Cabecera y pie de página
 - ⬜ Grid & Flexbox layout
+- ⬜ Marcas de contenido (bookmark)
 - ⬜ Tabla de contenido o índice
 - ⬜ Imágenes en formato JPG, GIF, PNG, SVG, BMP, WMF
 - 🟩 ...
@@ -51,6 +52,44 @@ import { NgxPDFModule } from '@michaelldev/ngx-pdf';
 export class AnyModule { }
 ```
 
+Y luego referencie **PDFDocument** en su componente:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { PDFDocument, PDFFormat } from '@michaelldev/ngx-pdf';
+...
+@Component({
+  selector: 'app-any',
+  templateUrl: './any.component.html',
+  styleUrls: ['./any.component.less']
+})
+export class AnyComponent implements OnInit {
+  ...
+  @ViewChild(PDFDocument) pdfDocument: PDFDocument;
+  ...
+  constructor () { }
+  ...
+  ngOnInit():void {
+
+    this.pdfDocument = new PDFDocument({
+      name: 'Report 2022',
+      format: PDFFormat.A4,
+      margin: {
+        top: '0.5in',
+        right: '0.5in',
+        bottom: '0.5in',
+        left: '0.5in'
+      },
+    });
+  }
+  ...
+  onDownload() {
+    this.pdfDocument.download();
+  }
+  ...
+}
+```
+
 ## Documentation
 
 | Componente       | Descripción                                                            |
@@ -68,130 +107,128 @@ export class AnyModule { }
 
 ## Data Model
 
-User mermaid here!
+```mermaid
+classDiagram
+    class PDFDocument {
+      +String id
+      +String name
+      +String author      
+      +PDFFormat format
+      +PDFPage[] pageList
+      +PDFMark[] markList
+      +download()
+    }
+    
+    class PDFPage {
+      +String id
+      +Number index
+      +PDFOrientation orientation
+      +PDFMargin margin
+    }
+    
+    class PDFPageHeader {
+      +String id
+      +PDFMargin margin
+    }
+    
+    class PDFPageFooter {
+      +String id
+      +PDFMargin margin
+    }
+    
+    class PDFMark {
+      +String id
+      +Number level
+      +String title
+      +Number index
+    }
+    
+    PDFPage --* PDFDocument
+    PDFPageHeader --* PDFDocument
+    PDFPageFooter --* PDFDocument
+    PDFMark --* PDFDocument
+```
 
 ## Example
 
-**your-report.component.html**
-
 ```html
-<pdf-document [setting]="pdfSetting"">
+<pdf-document #pdfDocument>
+  
+  <pdf-header let-document>
+    <ng-container *ngFor="let page of document.pageList; first as firstPage">
+      <ng-container *ngIf="!firstPage">
+        <div class="flex flex-row flex-between">
+           <img src="assets/logo.svg" height="20" />
+	   <span> April 12, 2022 </span>
+	</div>
+      </ng-container>
+    </ng-container>
+  </pdf-header>
 
-	<pdf-header let-doc="doc">
-		<ng-container *ngFor="let page of doc.pageList; first as firstPage">
-			<ng-container *ngIf="firstPage == false">
-				<div class="flex flex-row flex-between">
-					<img src="assets/logo.svg" height="20" />
-					<span> {{ report.createdAt | date: 'short' }} </span>
-				</div>
-			</ng-container>
-		</ng-container>
-	</pdf-header>
+  <pdf-footer let-document>
+    <ng-container *ngFor="let page of document.pageList; first as firstPage; index as pageIndex">
+      <ng-container *ngIf="!firstPage">
+        <div class="flex flex-row flex-right">
+          {{ pageIndex }} / {{ document.pageList.length }}
+        </div>
+      </ng-container>
+    </ng-container>
+  </pdf-footer>
 
-	<pdf-footer let-doc="doc">
-		<ng-container *ngFor="let page of doc.pageList; first as firstPage; index as pageIndex">
-			<ng-container *ngIf="firstPage == false">
-				<div class="flex flex-row flex-right">
-					{{ pageIndex }} / {{ doc.pageList.length }}
-				</div>
-			</ng-container>
-		</ng-container>
-	</pdf-footer>
+  <pdf-front-page>
+    <div class="flex flex-row flex-center"> Report | April 2022 </div>
+  </pdf-front-page>
 
-	<pdf-front-page>
-		<div class="flex flex-row flex-center">
-			{{ report.title }}
-		</div>
-	</pdf-front-page>
+  <pdf-back-page>
+    <div class="flex flex-row flex-bottom">
+      <img src="assets/logo.svg" height="20" />
+    </div>
+  </pdf-back-page>
 
-	<pdf-back-page>
-		<div class="flex flex-row flex-bottom">
-			{{ report.title }}
-		</div>
-	</pdf-back-page>
+  <pdf-mark-page let-document>
+    <ng-container *ngFor="let mark of document.markList">
+      <div [ngClass]="{ 'fw-bold': mark.level == 1, 'fw-semibold': mark.level == 2, 'fw-regular': mark.level == 3 }">
+        {{ mark.title }} ... {{ mark.index }}
+      </div>
+    </ng-container>
+  </pdf-mark-page>
 
-	<pdf-mark-page let-doc="doc">
-		<ng-container *ngFor="let mark of doc.markList">
-			<div [ngClass]="{ 'fw-bold': mark.level == 1, 'fw-semibold': mark.level == 2, 'fw-regular': mark.level == 3 }">
-				{{ mark.title }} ... {{ mark.index }}
-			</div>
-		</ng-container>
-	</pdf-mark-page>
+  <pdf-content>
+    <div> Report | April 2022 </div>
+    <pdf-mark title="Report | April 2022" level="1" />
+    <pdf-page orientation="landscape" />
 
-	<pdf-content>
-		<div> {{ report.title }} </div>
-		<pdf-mark [title]="report.title" level="1" />
-		<pdf-page orientation="landscape" />
-
-		<ng-container *ngFor="let product of report.productList">
-			<pdf-mark [title]="product.name" level="2" />
-			<div class="flex flex-column flex-gap">
-				<div class="flex flex-row flex-gap"> {{ product.name }} </div>
-				<ng-container *ngFor="let transact of product.transactionList">
-					<div class="flex flex-row flex-gap">
-						<span> {{ transact.agency }} </span>
-						<span> {{ transact.quantity }} </span>
-						<span> {{ product.price }} </span>
-						<span> {{ transact.total }} </span>
-						<span> {{ transact.date | date: 'long' }} </span>
-					</div>
-				</ng-container>
-			</div>
-			<pdf-break-page />
-		</ng-container>
-	</pdf-content>
+    <pdf-mark title="Product A" level="2" />
+    <div class="flex flex-column flex-gap">
+      <div class="flex flex-row flex-gap"> Product A </div>
+      <div class="flex flex-row flex-gap">
+        <p> Local A </p> <p> 1 </p> <p> $ 49.99 </p> <p> $ 49.99 </p> <p> 10 January 2022 10:05 AM </p>
+        <p> Local A </p> <p> 2 </p> <p> $ 19.99 </p> <p> $ 19.99 </p> <p> 11 January 2022 12:05 AM </p>
+        <p> Local B </p> <p> 1 </p> <p> $ 9.99 </p> <p> $ 9.99 </p> <p> 11 January 2022 11:05 AM </p>
+        <p> Local C </p> <p> 1 </p> <p> $ 5.29 </p> <p> $ 5.29 </p> <p> 10 January 2022 16:05 PM </p>
+      </div>
+    </div>
+	  
+    <pdf-break-page />
+	  
+    <pdf-mark title="Product B" level="2" />
+    <div class="flex flex-column flex-gap">
+      <div class="flex flex-row flex-gap"> Product B </div>
+      <div class="flex flex-row flex-gap">
+        <p> Local A </p> <p> 1 </p> <p> $ 49.99 </p> <p> $ 49.99 </p> <p> 10 January 2022 10:05 AM </p>
+        <p> Local A </p> <p> 2 </p> <p> $ 19.99 </p> <p> $ 19.99 </p> <p> 11 January 2022 12:05 AM </p>
+        <p> Local B </p> <p> 1 </p> <p> $ 9.99 </p> <p> $ 9.99 </p> <p> 11 January 2022 11:05 AM </p>
+        <p> Local C </p> <p> 1 </p> <p> $ 5.29 </p> <p> $ 5.29 </p> <p> 10 January 2022 16:05 PM </p>
+      </div>
+    </div>
+	  
+    <pdf-break-page />
+	  
+  </pdf-content>
 
 </pdf-document>
 									   
-<button (click)="onDownloadPDF()"> Download PDF </button>
-```
-
-
-**your-report.component.ts**
-
-```typescript
-...
-@ViewChild(PDFFile) pdfFile: PDFFile;
-...
-constructor (private pdfService: NgxPDFService) {}
-...
-ngOnInit():void {
-
-    this.pdfFile.set({
-        filename: 'Report.pdf',
-        paper: 'A4',
-        margin: {
-            top: '0.5in',
-            right: '0.5in',
-            bottom: '0.5in',
-            left: '0.5in'
-        },
-    });
-
-    this.report = {
-        title: 'Sales Report 2022',
-        createdAt: new Date(),
-        productList: [
-            {
-                name: 'Product 1',
-                price: 100,
-                transactionList: [
-                    {
-                        agency: 'Agency 1',
-                        quantity: 10,
-                        total: 100 * 10,
-                        date: new Date()
-                    }
-                ],
-            }
-        ],
-    };
-}
-...
-onDownloadPDF() {
-    this.pdfService.download(pdfFile);
-}
-...
+<button (click)="onDownload()"> Download PDF Report </button>
 ```
 
 ## Feedback
@@ -200,5 +237,4 @@ Si tiene alguna sugerencia, recomendación y/o problema relacionado al proyecto,
 
 ## Credits
 
-**Ngx-pdf** es un proyecto de código abierto. 
-Es mi intento de retribuir y colaborar con la comunidad de código abierto.
+**Ngx-pdf** es un proyecto de código abierto como intento de retribuir y colaborar con la comunidad de código abierto.
