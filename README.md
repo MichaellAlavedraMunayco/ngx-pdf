@@ -3,12 +3,23 @@
 
 > Angular +10 component library for building PDF files on-the-fly
 
-**ngx-pdf** está construida para desarrolladores en Angular e inspirada en la librería para PHP [mPDF](https://mpdf.github.io/), y tiene como finalidad, facilitar la codificación y generación de archivos complejos de PDF.
+**ngx-pdf** está construida para desarrolladores en Angular e inspirada en la librería para PHP [mPDF](https://mpdf.github.io/), y tiene como finalidad facilitar la codificación y generación de archivos complejos de PDF.
 
 El propósito principal de **ngx-pdf** consiste en convertir **sobre la marcha**, código **HTML** y **CSS** en un archivo **PDF** mediante componentes pre-construidos.
 **Ngx-pdf** no genera archivos PDF desde Typescript.
 
 Para mayor entendimiento, revise la [documentación](https://michaellalavedramunayco.github.io/ngx-pdf) y las [demostraciones](https://michaellalavedramunayco.github.io/ngx-pdf)
+
+## Features
+
+- ⬜ Marcas de contenido (bookmark)
+- ⬜ Orientación de páginas
+- ⬜ Numeración de páginas
+- ⬜ Cabecera y pie de página
+- ⬜ Grid & Flexbox layout
+- ⬜ Tabla de contenido o índice
+- ⬜ Imágenes en formato JPG, GIF, PNG, SVG, BMP, WMF
+- 🟩 ...
 
 ## Prerequisites
 
@@ -16,9 +27,9 @@ Use la versión 10 de Angular o superior
 
 ## Install
 
-Para usar **ngx-pdf** en su proyecto, realice la instalación usando [npm](https://www.npmjs.com/package/@michaelldev/ngx-pdf):
+Para instalar **ngx-pdf** en su proyecto, realice la instalación usando [npm](https://www.npmjs.com/package/@michaelldev/ngx-pdf):
 
-```cmd
+```
 npm i @michaelldev/ngx-pdf --save
 ```
 
@@ -27,22 +38,44 @@ npm i @michaelldev/ngx-pdf --save
 Ubique el módulo en donde desee usar **ngx-pdf** y agréguelo en la lista de importación de módulos.
 
 ```typescript
+import { NgModule } from '@angular/core';
 import { NgxPDFModule } from '@michaelldev/ngx-pdf';
 ...
-@NgModule()
-imports: [
-	NgxPDFModule
-]
-class YourModule { }
-
+@NgModule({
+  imports: [
+    ...
+    NgxPDFModule
+    ...
+  ]
+})
+export class AnyModule { }
 ```
 
-## Usage/Examples
+## Documentation
+
+| Componente       | Descripción                                                            |
+| :--------------- | :--------------------------------------------------------------------- |
+| `pdf-document`   | Componente raíz que representa el documento PDF en donde se trabajará. |
+| `pdf-header`     | Plantilla de cabecera que se incluirá en cada página del documento que se desee. |
+| `pdf-footer`     | Plantilla de pie de página que se incluirá en cada página del documento que se desee. |
+| `pdf-front-page` | Plantilla de la portada que se incluirá en la primera página del documento. |
+| `pdf-back-page`  | Plantilla de la contraportada que se incluirá en la última página del documento. |
+| `pdf-mark-page`  | Plantilla de la tabla de contenido o índice que se incluirá después de la portada. |
+| `pdf-content`    | Plantilla del contenido del documento. |
+| `pdf-page`       | Declaración de las propiedades de la página en la que se trabaja. |
+| `pdf-break-page` | Declaración de salto o corte de página. |
+| `pdf-mark`       | Declaración de una referencia a una sección del documento que se incluirá en la tabla de contenido. |
+
+## Data Model
+
+User mermaid here!
+
+## Example
 
 **your-report.component.html**
 
 ```html
-<pdf-document [setting]="pdfSetting" (download)="onDownload($event)">
+<pdf-document [setting]="pdfSetting"">
 
 	<pdf-header let-doc="doc">
 		<ng-container *ngFor="let page of doc.pageList; first as firstPage">
@@ -65,17 +98,17 @@ class YourModule { }
 		</ng-container>
 	</pdf-footer>
 
-	<pdf-frontcover-page>
+	<pdf-front-page>
 		<div class="flex flex-row flex-center">
 			{{ report.title }}
 		</div>
-	</pdf-frontcover-page>
+	</pdf-front-page>
 
-	<pdf-backcover-page>
+	<pdf-back-page>
 		<div class="flex flex-row flex-bottom">
 			{{ report.title }}
 		</div>
-	</pdf-backcover-page>
+	</pdf-back-page>
 
 	<pdf-mark-page let-doc="doc">
 		<ng-container *ngFor="let mark of doc.markList">
@@ -109,6 +142,8 @@ class YourModule { }
 	</pdf-content>
 
 </pdf-document>
+									   
+<button (click)="onDownloadPDF()"> Download PDF </button>
 ```
 
 
@@ -116,11 +151,13 @@ class YourModule { }
 
 ```typescript
 ...
-pdfSetting: PDFSetting;
+@ViewChild(PDFFile) pdfFile: PDFFile;
+...
+constructor (private pdfService: NgxPDFService) {}
 ...
 ngOnInit():void {
 
-    this.pdfSetting = {
+    this.pdfFile.set({
         filename: 'Report.pdf',
         paper: 'A4',
         margin: {
@@ -129,7 +166,7 @@ ngOnInit():void {
             bottom: '0.5in',
             left: '0.5in'
         },
-    };
+    });
 
     this.report = {
         title: 'Sales Report 2022',
@@ -151,18 +188,11 @@ ngOnInit():void {
     };
 }
 ...
-onDownload(pdfFile: File) {
-    window.open(URL.createObjectURL(pdfFile));
+onDownloadPDF() {
+    this.pdfService.download(pdfFile);
 }
 ...
 ```
-
-## Documentation
-
-| Componente | Descripción |
-| :--------- | :---------- |
-| `pdf-document` | Es el componente raíz que representa el documento PDF en donde se trabajará. |
-
 
 ## Feedback
 
