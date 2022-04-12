@@ -1,3 +1,7 @@
+<!--
+Created: Tue Apr 12 2022 11:44:41 GMT-0400 (hora de Bolivia)
+Modified: Tue Apr 12 2022 11:48:08 GMT-0400 (hora de Bolivia)
+-->
 
 # Ngx PDF
 
@@ -13,14 +17,14 @@ Para mayor entendimiento, revise la [documentación](https://michaellalavedramun
 
 ## Features
 
-- ⬜ Orientación de páginas
-- ⬜ Numeración de páginas
-- ⬜ Cabecera y pie de página
-- ⬜ Grid & Flexbox layout
-- ⬜ Marcas de contenido (bookmark)
-- ⬜ Tabla de contenido o índice
-- ⬜ Imágenes en formato JPG, GIF, PNG, SVG, BMP, WMF
-- 🟩 ...
+* ⬜ Orientación de páginas
+* ⬜ Numeración de páginas
+* ⬜ Cabecera y pie de página
+* ⬜ Grid & Flexbox layout
+* ⬜ Marcas de contenido (bookmark)
+* ⬜ Tabla de contenido o índice
+* ⬜ Imágenes en formato JPG, GIF, PNG, SVG, BMP, WMF
+<!-- * 🟩 ... -->
 
 ## Prerequisites
 
@@ -30,7 +34,7 @@ Use la versión 10 de Angular o superior
 
 Para instalar **ngx-pdf** en su proyecto, realice la instalación usando [npm](https://www.npmjs.com/package/@michaelldev/ngx-pdf):
 
-```
+```cmd
 npm i @michaelldev/ngx-pdf --save
 ```
 
@@ -94,16 +98,16 @@ export class AnyComponent implements OnInit {
 
 | Componente       | Descripción                                                            |
 | :--------------- | :--------------------------------------------------------------------- |
-| `pdf-document`   | Componente raíz que representa el documento PDF en donde se trabajará. |
-| `pdf-header`     | Plantilla de cabecera que se incluirá en cada página del documento que se desee. |
-| `pdf-footer`     | Plantilla de pie de página que se incluirá en cada página del documento que se desee. |
+| `pdf-document` | Componente raíz que representa el documento PDF en donde se trabajará. |
+| `pdf-header` | Plantilla de cabecera que se incluirá en cada página del documento que se desee. |
+| `pdf-footer` | Plantilla de pie de página que se incluirá en cada página del documento que se desee. |
 | `pdf-front-page` | Plantilla de la portada que se incluirá en la primera página del documento. |
-| `pdf-back-page`  | Plantilla de la contraportada que se incluirá en la última página del documento. |
-| `pdf-mark-page`  | Plantilla de la tabla de contenido o índice que se incluirá después de la portada. |
-| `pdf-content`    | Plantilla del contenido del documento. |
-| `pdf-page`       | Declaración de las propiedades de la página en la que se trabaja. |
+| `pdf-back-page` | Plantilla de la contraportada que se incluirá en la última página del documento. |
+| `pdf-mark-page` | Plantilla de la tabla de contenido o índice que se incluirá después de la portada. |
+| `pdf-content` | Plantilla del contenido del documento. |
+| `pdf-page` | Declaración de las propiedades de la página en la que se trabaja. |
 | `pdf-break-page` | Declaración de salto o corte de página. |
-| `pdf-mark`       | Declaración de una referencia a una sección del documento que se incluirá en la tabla de contenido. |
+| `pdf-mark` | Declaración de una referencia a una sección del documento que se incluirá en la tabla de contenido. |
 
 ## Data Model
 
@@ -112,7 +116,7 @@ classDiagram
     class PDFDocument {
       +String id
       +String name
-      +String author      
+      +String author
       +PDFFormat format
       +PDFPage[] pageList
       +PDFMark[] markList
@@ -153,81 +157,91 @@ classDiagram
 
 ```html
 <pdf-document #pdfDocument>
-  
-  <pdf-header let-document>
-    <ng-container *ngFor="let page of document.pageList; first as firstPage">
-      <ng-container *ngIf="!firstPage">
-        <div class="flex flex-row flex-between">
-           <img src="assets/logo.svg" height="20" />
-	   <span> April 12, 2022 </span>
-	</div>
-      </ng-container>
-    </ng-container>
-  </pdf-header>
 
-  <pdf-footer let-document>
-    <ng-container *ngFor="let page of document.pageList; first as firstPage; index as pageIndex">
-      <ng-container *ngIf="!firstPage">
-        <div class="flex flex-row flex-right">
-          {{ pageIndex }} / {{ document.pageList.length }}
+    <pdf-header let-document>
+        <ng-container *ngFor="let page of document.pageList; first as firstPage">
+            <ng-container *ngIf="!firstPage">
+                <div class="flex flex-row flex-between">
+                    <img src="assets/logo.svg" height="20" />
+                    <span> April 12, 2022 </span>
+                </div>
+            </ng-container>
+        </ng-container>
+    </pdf-header>
+
+    <pdf-footer let-document>
+        <ng-container *ngFor="let page of document.pageList; first as firstPage; index as pageIndex">
+            <ng-container *ngIf="!firstPage">
+                <div class="flex flex-row flex-right">
+                    {{ pageIndex }} / {{ document.pageList.length }}
+                </div>
+            </ng-container>
+        </ng-container>
+    </pdf-footer>
+
+    <pdf-front-page>
+        <div class="flex flex-row flex-center"> Report | April 2022 </div>
+    </pdf-front-page>
+
+    <pdf-back-page>
+        <div class="flex flex-row flex-bottom">
+            <img src="assets/logo.svg" height="20" />
         </div>
-      </ng-container>
-    </ng-container>
-  </pdf-footer>
+    </pdf-back-page>
 
-  <pdf-front-page>
-    <div class="flex flex-row flex-center"> Report | April 2022 </div>
-  </pdf-front-page>
+    <pdf-mark-page let-document>
+        <ng-container *ngFor="let mark of document.markList">
+            <div [className]="'level-' + mark.level">
+                {{ mark.title }} ... {{ mark.index }}
+            </div>
+        </ng-container>
+    </pdf-mark-page>
 
-  <pdf-back-page>
-    <div class="flex flex-row flex-bottom">
-      <img src="assets/logo.svg" height="20" />
-    </div>
-  </pdf-back-page>
+    <pdf-content>
 
-  <pdf-mark-page let-document>
-    <ng-container *ngFor="let mark of document.markList">
-      <div [ngClass]="{ 'fw-bold': mark.level == 1, 'fw-semibold': mark.level == 2, 'fw-regular': mark.level == 3 }">
-        {{ mark.title }} ... {{ mark.index }}
-      </div>
-    </ng-container>
-  </pdf-mark-page>
+        <div> Report | April 2022 </div>
+        <pdf-mark title="Report | April 2022" level="1" />
+        <pdf-page orientation="landscape" />
 
-  <pdf-content>
-    <div> Report | April 2022 </div>
-    <pdf-mark title="Report | April 2022" level="1" />
-    <pdf-page orientation="landscape" />
+        <pdf-mark title="Product A" level="2" />
+        <div class="flex flex-column flex-gap">
+            <div class="flex flex-row flex-gap"> Product A </div>
+            <div class="flex flex-row flex-gap">
+                <p> Local A </p>
+                <p> 1 </p>
+                <p> $ 49.99 </p>
+                <p> $ 49.99 </p>
+                <p> 10 January 2022 10:05 AM </p>
+            </div>
+            <div class="flex flex-row flex-gap">
+                <p> Local A </p>
+                <p> 2 </p>
+                <p> $ 19.99 </p>
+                <p> $ 19.99 </p>
+                <p> 11 January 2022 12:05 AM </p>
+            </div>
+            <div class="flex flex-row flex-gap">
+                <p> Local B </p>
+                <p> 1 </p>
+                <p> $ 9.99 </p>
+                <p> $ 9.99 </p>
+                <p> 11 January 2022 11:05 AM </p>
+            </div>
+            <div class="flex flex-row flex-gap">
+                <p> Local C </p>
+                <p> 1 </p>
+                <p> $ 5.29 </p>
+                <p> $ 5.29 </p>
+                <p> 10 January 2022 16:05 PM </p>
+            </div>
+        </div>
 
-    <pdf-mark title="Product A" level="2" />
-    <div class="flex flex-column flex-gap">
-      <div class="flex flex-row flex-gap"> Product A </div>
-      <div class="flex flex-row flex-gap">
-        <p> Local A </p> <p> 1 </p> <p> $ 49.99 </p> <p> $ 49.99 </p> <p> 10 January 2022 10:05 AM </p>
-        <p> Local A </p> <p> 2 </p> <p> $ 19.99 </p> <p> $ 19.99 </p> <p> 11 January 2022 12:05 AM </p>
-        <p> Local B </p> <p> 1 </p> <p> $ 9.99 </p> <p> $ 9.99 </p> <p> 11 January 2022 11:05 AM </p>
-        <p> Local C </p> <p> 1 </p> <p> $ 5.29 </p> <p> $ 5.29 </p> <p> 10 January 2022 16:05 PM </p>
-      </div>
-    </div>
-	  
-    <pdf-break-page />
-	  
-    <pdf-mark title="Product B" level="2" />
-    <div class="flex flex-column flex-gap">
-      <div class="flex flex-row flex-gap"> Product B </div>
-      <div class="flex flex-row flex-gap">
-        <p> Local A </p> <p> 1 </p> <p> $ 49.99 </p> <p> $ 49.99 </p> <p> 10 January 2022 10:05 AM </p>
-        <p> Local A </p> <p> 2 </p> <p> $ 19.99 </p> <p> $ 19.99 </p> <p> 11 January 2022 12:05 AM </p>
-        <p> Local B </p> <p> 1 </p> <p> $ 9.99 </p> <p> $ 9.99 </p> <p> 11 January 2022 11:05 AM </p>
-        <p> Local C </p> <p> 1 </p> <p> $ 5.29 </p> <p> $ 5.29 </p> <p> 10 January 2022 16:05 PM </p>
-      </div>
-    </div>
-	  
-    <pdf-break-page />
-	  
-  </pdf-content>
+        <pdf-break-page />
+
+    </pdf-content>
 
 </pdf-document>
-									   
+
 <button (click)="onDownload()"> Download PDF Report </button>
 ```
 

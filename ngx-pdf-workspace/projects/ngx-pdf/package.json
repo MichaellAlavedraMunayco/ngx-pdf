@@ -1,6 +1,6 @@
 {
 	"name": "@michaelldev/ngx-pdf",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Angular +10 Components Library to create PDF files",
 	"author": "Michaell Alavedra Munayco <f.michaell.a.m@gmail.com> (https://github.com/MichaellAlavedraMunayco)",
 	"repository": {
@@ -14,6 +14,7 @@
 	"keywords": [
 		"angular",
 		"pdf",
+		"document",
 		"component",
 		"template",
 		"HTML",
