@@ -1,14 +1,41 @@
 
 # Ngx PDF
 
-**ngx-pdf** está dedicada a los desarrolladores en Angular y busca facilitar el trabajo con archivos PDF.
+> Angular +10 component library for building PDF files on-the-fly
 
-El objetivo de este proyecto consiste en convertir **HTML** y **CSS** en un archivo **PDF** con ayuda de los componentes pre-construidos de **ngx-pdf**.
+**ngx-pdf** está construida para desarrolladores en Angular e inspirada en la librería para PHP [mPDF](https://mpdf.github.io/), y tiene como finalidad, facilitar la codificación y generación de archivos complejos de PDF.
 
-> **Ngx-pdf** no genera archivos PDF desde Typescript.
+El propósito principal de **ngx-pdf** consiste en convertir **sobre la marcha**, código **HTML** y **CSS** en un archivo **PDF** mediante componentes pre-construidos.
+**Ngx-pdf** no genera archivos PDF desde Typescript.
 
-> El proyecto está inspirado en la librería **mPDF** desarrollada en **PHP**.
+Para mayor entendimiento, revise la [documentación](https://michaellalavedramunayco.github.io/ngx-pdf) y las [demostraciones](https://michaellalavedramunayco.github.io/ngx-pdf)
 
+## Prerequisites
+
+Use la versión 10 de Angular o superior
+
+## Install
+
+Para usar **ngx-pdf** en su proyecto, realice la instalación usando [npm](https://www.npmjs.com/package/@michaelldev/ngx-pdf):
+
+```cmd
+npm i @michaelldev/ngx-pdf --save
+```
+
+## How to use
+
+Ubique el módulo en donde desee usar **ngx-pdf** y agréguelo en la lista de importación de módulos.
+
+```typescript
+import { NgxPDFModule } from '@michaelldev/ngx-pdf';
+...
+@NgModule()
+imports: [
+	NgxPDFModule
+]
+class YourModule { }
+
+```
 
 ## Usage/Examples
 
@@ -139,6 +166,9 @@ onDownload(pdfFile: File) {
 
 ## Feedback
 
-Si tiene alguna sugerencia, recomendación y/o problema relacionado al proyecto, porfavor hágamelo saber mediante una `issue` en la sección `issues` de este repositorio.
+Si tiene alguna sugerencia, recomendación y/o problema relacionado al proyecto, porfavor hágamelo saber mediante una `issue` en la sección `issues` del [repositorio en GitHub](https://github.com/MichaellAlavedraMunayco/ngx-pdf) de este proyecto.
 
-También puede escribirme a mi correo f.michaell.a.m@gmail.com
+## Credits
+
+**Ngx-pdf** es un proyecto de código abierto. 
+Es mi intento de retribuir y colaborar con la comunidad de código abierto.
